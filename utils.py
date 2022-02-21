@@ -5,10 +5,7 @@ import pytesseract as tess
 from timeit import default_timer as timer
 
 
-# Assumes input is a line of text
-import main
-
-
+# Gets text from a cropped image (Must be a line of text - no paragraphs)
 def get_ctext(img, area=None):
     if area is None:
         crop = img
@@ -22,6 +19,7 @@ def get_ctext(img, area=None):
     return text
 
 
+# Gets a number from a cropped image
 def get_cnum(img, area):
     text = get_ctext(img, area)
     try:
@@ -48,6 +46,27 @@ def get_shop(img):
     return names
 
 
+# Checks if League game client is running
+def league_is_running():
+    for proc in psutil.process_iter():
+        try:
+            process_name = proc.name()
+            if process_name == "League of Legends.exe":
+                return True
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+            print("err")
+    return False
+
+
+# Simple elapsed time function
+def elapsed_time(start_time, dur):
+    curr = timer()
+    if curr - start_time >= dur:
+        return True
+
+
+# Wrappers
 def get_cards(img):
     text = []
     for card in consts.cards:
@@ -67,18 +86,6 @@ def get_stage(img):
     return get_ctext(img, consts.stage)
 
 
-def league_is_running():
-    for proc in psutil.process_iter():
-        try:
-            process_name = proc.name()
-            if process_name == "League of Legends.exe":
-                return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-            print("err")
-    return False
-
-
 def get_exp(img):
     return get_ctext(img, consts.exp)
 
@@ -86,9 +93,4 @@ def get_exp(img):
 def get_lvl(img):
     return get_cnum(img, consts.level)
 
-
-def elapsed_time(start_time, dur):
-    curr = timer()
-    if curr - start_time >= dur:
-        return True
 
