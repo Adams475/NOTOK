@@ -1,6 +1,7 @@
 from timeit import default_timer as timer
 from pytesseract import pytesseract as tess
 from PIL import ImageGrab
+import subprocess
 import signal
 import sys
 import pyautogui
@@ -17,10 +18,12 @@ in_game = False
 got_into = True
 composition = consts.yordles
 games_played = -1
+start_queue = 0
+client_reboots = 0
 
 
 def signal_handler(sig, frame):
-    print('Games played: ' + str(games_played))
+    print('Games played: ' + str(games_played) + ', Client Reboots: ' + str(client_reboots))
     sys.exit(0)
 
 
@@ -28,8 +31,20 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     while in_queue:
         if got_into:
+            start_queue = timer()
             games_played += 1
             got_into = False
+        if utils.elapsed_time(start_queue, 600):
+            subprocess.call(["taskkill", "/F", "/IM", "LeagueClient.exe"])
+            time.sleep(30)
+            subprocess.call(['C:\\Riot Games\\League of Legends\\LeagueClient.exe'])
+            time.sleep(60)
+            controller.move_and_click(coord=(442, 198))
+            controller.move_and_click(coord=(938, 396))
+            controller.move_and_click(coord=(861, 839))
+            start_queue = 0
+            client_reboots += 1
+            continue
         controller.move_and_click(consts.find_match)
         time.sleep(2)
         controller.move_and_click(consts.accept)
@@ -39,6 +54,7 @@ if __name__ == '__main__':
         start = timer()
         health_count = 0
         while utils.league_is_running():
+            start_queue = 0
             got_into = True
             img = ImageGrab.grab()
             if utils.elapsed_time(start, dur=10):
@@ -70,7 +86,3 @@ if __name__ == '__main__':
                         j = int((gold_check - 50) / 4)
                         for i in range(j):
                             controller.press_key('f')
-
-
-
-
