@@ -1,10 +1,8 @@
-import signal
-import sys
-
-import PIL.Image
 from timeit import default_timer as timer
 from pytesseract import pytesseract as tess
 from PIL import ImageGrab
+import signal
+import sys
 import pyautogui
 import time
 import consts

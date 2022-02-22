@@ -1,8 +1,8 @@
-import psutil
-from PIL import ImageEnhance, ImageOps
-import consts
-import pytesseract as tess
 from timeit import default_timer as timer
+from PIL import ImageEnhance, ImageOps
+import pytesseract as tess
+import psutil
+import consts
 
 
 # Gets text from a cropped image (Must be a line of text - no paragraphs)
@@ -55,7 +55,6 @@ def league_is_running():
                 return True
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
-            print("err")
     return False
 
 
