@@ -1,11 +1,14 @@
 from timeit import default_timer as timer
 from pytesseract import pytesseract as tess
+from multiprocessing.connection import Client
 from PIL import ImageGrab
+import multiprocessing
 import subprocess
 import signal
 import sys
 import pyautogui
 import time
+import Interface
 import consts
 import controller
 import decisions
@@ -20,14 +23,24 @@ composition = consts.yordles
 games_played = -1
 start_queue = 0
 client_reboots = 0
+gui_client = None
+
+
+def spawn_child(target):
+    child = multiprocessing.Process(target=target)
+    child.start()
 
 
 def signal_handler(sig, frame):
     print('Games played: ' + str(games_played) + ', Client Reboots: ' + str(client_reboots))
+    gui_client.send('close')
+    gui_client.close()
     sys.exit(0)
 
 
 if __name__ == '__main__':
+    spawn_child(Interface.Gui().initialize_gui)
+    gui_client = Client(('localhost', 6000), authkey=b'?')
     signal.signal(signal.SIGINT, signal_handler)
     while in_queue:
         if got_into:
@@ -35,6 +48,7 @@ if __name__ == '__main__':
             games_played += 1
             got_into = False
         if utils.elapsed_time(start_queue, 600):
+            print("Rebooting...")
             subprocess.call(["taskkill", "/F", "/IM", "LeagueClient.exe"])
             time.sleep(30)
             subprocess.call(['C:\\Riot Games\\League of Legends\\LeagueClient.exe'])
@@ -79,10 +93,10 @@ if __name__ == '__main__':
                     if champ_name in composition:
                         controller.purchase(shop.index(champ_name))
                 if utils.get_lvl(img) >= 6:
-                    if gold_check >= 54:
+                    if gold_check > 54:
                         controller.press_key('d')
                 elif utils.get_lvl(img) == 5:
-                    if gold_check >= 54:
+                    if gold_check > 54:
                         j = int((gold_check - 50) / 4)
                         for i in range(j):
                             controller.press_key('f')

@@ -20,7 +20,7 @@ cards = [(490, 558, 690, 580), (848, 558, 1049, 580), (1209, 558, 1412, 580)]
 
 home = (451, 660)
 
-yordles = ("Lulu", "Tristana", "Poppy", "Vex", "Ziggs", "Heimerdinger")
+yordles = ("Lulu", "Corki", "Poppy", "Vex", "Ziggs", "Gnar", "Blitzcrank")
 
 card_choices = ['So Small', 'Featherweights I', 'Underdogs', 'Thrill of the Hunt I', 'Celestial Blessing II',
                 'Featherweights II', 'Rich Get Richer', 'Sunfire Board', 'Trade Sector', '	Golden Ticket', 'Level Up!',
