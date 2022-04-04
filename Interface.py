@@ -3,6 +3,14 @@ from multiprocessing.connection import Listener
 import eel
 
 
+def process_message(instance, msg):
+    match msg[0]:
+        case "games_played":
+            instance.games_played = msg[1]
+        case "reboot":
+            instance.reboots = msg[1]
+
+
 class Gui:
     games_played = 0
     reboots = 0
@@ -15,9 +23,9 @@ class Gui:
         address = ('localhost', 6000)  # family is deduced to be 'AF_INET'
         listener = Listener(address, authkey=b'?')
         conn = listener.accept()
-        print('connection accepted from', listener.last_accepted)
         while True:
             msg = conn.recv()
+            process_message(self, msg)
             if msg == 'close':
                 conn.close()
                 break
@@ -27,6 +35,4 @@ class Gui:
         eel.init('web')
         listener = threading.Thread(target=self.listen)
         listener.start()
-        while True:
-            print(self.test)
         eel.start('index.html', size=(300, 200))
