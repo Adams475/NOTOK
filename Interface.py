@@ -4,7 +4,9 @@ import eel
 
 
 class Gui:
-    test = "Unchanged"
+    games_played = 0
+    reboots = 0
+    tokens_earned = 0
 
     def __init__(self):
         pass
@@ -16,7 +18,6 @@ class Gui:
         print('connection accepted from', listener.last_accepted)
         while True:
             msg = conn.recv()
-            self.test = "Changed"
             if msg == 'close':
                 conn.close()
                 break

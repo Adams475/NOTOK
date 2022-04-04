@@ -42,6 +42,7 @@ if __name__ == '__main__':
     spawn_child(Interface.Gui().initialize_gui)
     gui_client = Client(('localhost', 6000), authkey=b'?')
     signal.signal(signal.SIGINT, signal_handler)
+
     while in_queue:
         if got_into:
             start_queue = timer()
