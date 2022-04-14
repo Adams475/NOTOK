@@ -1,5 +1,6 @@
 import threading
-from multiprocessing.connection import Listener
+import time
+from multiprocessing.connection import Listener, Client
 import eel
 
 
@@ -23,6 +24,10 @@ class Gui:
         address = ('localhost', 6000)  # family is deduced to be 'AF_INET'
         listener = Listener(address, authkey=b'?')
         conn = listener.accept()
+
+        time.sleep(6)
+        game_client = Client(('localhost', 6001), authkey=b'?')
+        game_client.send('start')
         while True:
             msg = conn.recv()
             process_message(self, msg)

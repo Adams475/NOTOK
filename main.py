@@ -1,6 +1,7 @@
+import threading
 from timeit import default_timer as timer
 from pytesseract import pytesseract as tess
-from multiprocessing.connection import Client
+from multiprocessing.connection import Client, Listener
 from PIL import ImageGrab
 import multiprocessing
 import subprocess
@@ -24,6 +25,22 @@ games_played = -1
 start_queue = 0
 client_reboots = 0
 gui_client = None
+start_main = False
+
+
+def listen():
+    address = ('localhost', 6001)  # family is deduced to be 'AF_INET'
+    listener = Listener(address, authkey=b'?')
+    conn = listener.accept()
+    while True:
+        msg = conn.recv()
+        if msg == 'start':
+            global start_main
+            start_main = True
+        if msg == 'close':
+            conn.close()
+            break
+    listener.close()
 
 
 def spawn_child(target):
@@ -42,6 +59,11 @@ if __name__ == '__main__':
     spawn_child(Interface.Gui().initialize_gui)
     gui_client = Client(('localhost', 6000), authkey=b'?')
     signal.signal(signal.SIGINT, signal_handler)
+    listen_thread = threading.Thread(target=listen)
+    listen_thread.start()
+
+    while not start_main:
+        pass
 
     while in_queue:
         if got_into:
@@ -57,7 +79,7 @@ if __name__ == '__main__':
             controller.move_and_click(coord=(442, 198))
             controller.move_and_click(coord=(938, 396))
             controller.move_and_click(coord=(861, 839))
-            start_queue = 0
+            got_into = True
             client_reboots += 1
             continue
         controller.move_and_click(consts.find_match)
