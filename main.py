@@ -1,5 +1,7 @@
-import threading
+import os
 from timeit import default_timer as timer
+
+import psutil
 from pytesseract import pytesseract as tess
 from multiprocessing.connection import Client, Listener
 from PIL import ImageGrab
@@ -8,6 +10,7 @@ import subprocess
 import signal
 import sys
 import pyautogui
+import threading
 import time
 import Interface
 import consts
@@ -29,7 +32,7 @@ start_main = False
 
 
 def listen():
-    address = ('localhost', 6001)  # family is deduced to be 'AF_INET'
+    address = (consts.local_connection, consts.game_port)  # family is deduced to be 'AF_INET'
     listener = Listener(address, authkey=b'?')
     conn = listener.accept()
     while True:
@@ -57,7 +60,11 @@ def signal_handler(sig, frame):
 
 if __name__ == '__main__':
     spawn_child(Interface.Gui().initialize_gui)
-    gui_client = Client(('localhost', 6000), authkey=b'?')
+    gui_client = Client((consts.local_connection, consts.gui_port), authkey=b'?')
+
+    gui_client.send(consts.open_connection)
+    gui_client.send(["pid", os.getpid()])
+    print("Sent pid")
     signal.signal(signal.SIGINT, signal_handler)
     listen_thread = threading.Thread(target=listen)
     listen_thread.start()

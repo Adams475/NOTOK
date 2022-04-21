@@ -23,7 +23,8 @@ home = (451, 660)
 yordles = ("Lulu", "Corki", "Poppy", "Vex", "Ziggs", "Gnar", "Blitzcrank")
 
 card_choices = ['So Small', 'Featherweights I', 'Underdogs', 'Thrill of the Hunt I', 'Celestial Blessing II',
-                'Featherweights II', 'Rich Get Richer', 'Sunfire Board', 'Trade Sector', '	Golden Ticket', 'Level Up!',
+                'Featherweights II', 'Rich Get Richer', 'Sunfire Board', 'Trade Sector', '	Golden Ticket',
+                'Level Up!',
                 'Woodland Charm']
 
 battle_stats = (1886, 117, 1905, 133)
@@ -50,3 +51,11 @@ time = (1141, 10, 1175, 32)
 exp = (408, 888, 449, 907)
 
 level = (316, 885, 338, 904)
+
+open_connection = "connection"
+
+local_connection = "localhost"
+
+game_port = 6000
+
+gui_port = 6001
