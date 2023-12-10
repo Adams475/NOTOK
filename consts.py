@@ -14,18 +14,24 @@ bench_chars = [(425, 780),
                (1249, 780),
                (1359, 780)]
 
+board_locs = [(1336, 645),
+              (1269, 402),
+              (563, 417),
+              (580, 196),
+              (1279, 215)]
+
 bench_chars_names = []
 
-cards = [(490, 558, 690, 580), (848, 558, 1049, 580), (1209, 558, 1412, 580)]
+cards = [(456, 534, 662, 570), (866, 534, 1068, 570), (1268, 534, 1475, 570)]
 
 home = (451, 660)
 
-yordles = ("Lulu", "Corki", "Poppy", "Vex", "Ziggs", "Gnar", "Blitzcrank")
+yordles = ("Lux", "Ahri", "Jarvan IV", "Vel'koz", "Swain", "Malzahar", "Orianna")
 
-card_choices = ['So Small', 'Featherweights I', 'Underdogs', 'Thrill of the Hunt I', 'Celestial Blessing II',
-                'Featherweights II', 'Rich Get Richer', 'Sunfire Board', 'Trade Sector', '	Golden Ticket',
-                'Level Up!',
-                'Woodland Charm']
+kda = ("Akali KD/A", "Ekko", "Neeko", "Kai'Sa", "Kennen", "Ahri", "Lillia", "Seraphine", "Evelynn")
+
+card_choices = ['Silver Veil', 'Cybernetic Uplink', 'Tiny Titans', 'Sorcerer Crest', 'Overcharged Manafont', 'Magic Wand',
+                'Magic Wand', 'Infusion', 'Jeweled Lotus', 'Unleashed Arcana', 'Jeweled Lotus III']
 
 battle_stats = (1886, 117, 1905, 133)
 
@@ -37,7 +43,7 @@ ok = (904, 846)
 
 hp = (1787, 213, 1824, 237)
 
-exit_game = (824, 552)
+exit_game = (971, 577)
 
 find_match = (856, 838)
 accept = (960, 721)

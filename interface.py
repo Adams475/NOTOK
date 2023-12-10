@@ -2,9 +2,7 @@ from multiprocessing.connection import Listener, Client
 import threading
 import eel
 import psutil
-
 import consts
-import main
 
 
 class Gui:
@@ -28,35 +26,42 @@ class Gui:
         eel.start('index.html', size=(500, 500))
 
     def listen(self):
-        address = (consts.local_connection, consts.gui_port)  # family is deduced to be 'AF_INET'
+        address = (consts.local_connection, consts.gui_port)
         listener = Listener(address, authkey=b'?')
         conn = listener.accept()
 
+        # Wait to receive initial connection from game client
         while True:
             msg = conn.recv()
             if msg == consts.open_connection:
                 self.game_client = Client((consts.local_connection, consts.game_port), authkey=b'?')
                 break
 
+        # Process messages from game client
         while True:
             msg = conn.recv()
-            self.process_message(msg)
             if msg == 'close':
-                self.game_client.send("close")
+                eel.browser_exit()
                 conn.close()
                 break
+            else:
+                self.process_message(msg)
+
         listener.close()
 
+    # Process messages from either eel or game client
     def process_message(self, msg):
-        print(msg[0])
-        match msg[0]:
+        match msg:
+            case "start":
+                self.game_client.send(msg)
             case "games_played":
-                self.games_played = msg[1]
+                self.games_played = msg
             case "reboot":
-                self.reboots = msg[1]
-            case "pid":
-                print("got pid")
-                self.main_process = psutil.Process(msg[1])
+                self.reboots = msg
+            case "pause":
+                gui_instance.pause()
+            case _:
+                self.main_process = psutil.Process(msg)
 
     def pause(self):
         if not self.suspended:
@@ -67,14 +72,12 @@ class Gui:
             self.suspended = False
 
 
-gui_instance = Gui()  # Dummy initialization
-
-
-@eel.expose
-def pause():
-    gui_instance.pause()
+gui_instance = Gui()
 
 
 @eel.expose
 def communicate(arg):
-    gui_instance.game_client.send(arg)
+    if arg == "exit":
+        gui_instance.game_client.send("close")
+    else:
+        gui_instance.process_message(arg)

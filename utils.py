@@ -1,3 +1,5 @@
+import subprocess
+import time
 from timeit import default_timer as timer
 from PIL import ImageEnhance, ImageOps
 import pytesseract as tess
@@ -6,6 +8,9 @@ import consts
 
 
 # Gets text from a cropped image (Must be a line of text - no paragraphs)
+import controller
+
+
 def get_ctext(img, area=None):
     if area is None:
         crop = img
@@ -93,3 +98,12 @@ def get_lvl(img):
     return get_cnum(img, consts.level)
 
 
+def reboot():
+    print("Rebooting...")
+    subprocess.call(["taskkill", "/F", "/IM", "LeagueClient.exe"])
+    time.sleep(30)
+    subprocess.call(['C:\\Riot Games\\League of Legends\\LeagueClient.exe'])
+    time.sleep(60)
+    controller.move_and_click(coord=(442, 198))
+    controller.move_and_click(coord=(938, 396))
+    controller.move_and_click(coord=(861, 839))

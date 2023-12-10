@@ -12,7 +12,13 @@ import utils
 def check_quit(health):
     if health == 0:
         controller.move_and_click(consts.exit_game)
-        time.sleep(10)
+        pyautogui.leftClick()
+        time.sleep(1)
+        pyautogui.mouseUp()
+        time.sleep(0.5)
+        pyautogui.mouseDown()
+        controller.move_and_click(consts.exit_game)
+        time.sleep(5)
         return True
 
 
